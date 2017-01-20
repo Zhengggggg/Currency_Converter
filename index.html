@@ -35,7 +35,7 @@
 		    xmlHttp.send(null);
 		}
 		var Currency; 
-		httpGetAsync("http://api.fixer.io/latest", function(request){
+		httpGetAsync("https://api.fixer.io/latest", function(request){
 			Currency = JSON.parse(request);
 			document.getElementById('date').innerHTML = "Updated at: " + Currency["date"];
 		});
