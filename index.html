@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+      <title>Converter</title>
+      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <style type="text/css">
+      		.row{
+      			margin-top:50px;
+      			margin-left:50px;
+      			margin-right:50px;
+      		}
+      </style>
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script type="text/JavaScript">
+
+      	$( document ).ready(function(){
+      		initialize();
+      		$('select').material_select();
+      	})
+
+      	function httpGetAsync(theUrl, callback)
+		{
+		    var xmlHttp = new XMLHttpRequest();
+		    xmlHttp.onreadystatechange = function() { 
+		        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+		            callback(xmlHttp.responseText);
+		    }
+		    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+		    xmlHttp.send(null);
+		}
+		var Currency; 
+		httpGetAsync("http://api.fixer.io/latest", function(request){
+			Currency = JSON.parse(request);
+			document.getElementById('date').innerHTML = "Updated at: " + Currency["date"];
+		});
+
+		function initialize(){
+			var country = [
+				{countryName:"Australia Dollar",code:"AUD"},
+				{countryName:"Bulgaria Lev",code:"BGN"},
+				{countryName:"Brazil Real",code:"BRL"},
+				{countryName:"Canada Dollar",code:"CAD"},
+				{countryName:"China Yuan Renminbi",code:"CNY"},
+				{countryName:"Croatia Kuna",code:"HRK"},
+				{countryName:"Czech Republic Koruna",code:"CZK"},
+				{countryName:"Denmark Krone",code:"DKK"},
+				{countryName:"Euro",code:"EUR"},
+				{countryName:"Hong Kong Dollar",code:"HKD"},
+				{countryName:"Hungary Forint",code:"HUF"},
+				{countryName:"India Rupee",code:"INR"},
+				{countryName:"Indonesia Rupiah",code:"IDR"},
+				{countryName:"Israel Shekel",code:"ILS"},
+				{countryName:"Japan Yen",code:"JPY"},
+				{countryName:"Malaysia Ringgit",code:"MYR"},
+				{countryName:"Mexico Peso",code:"MXN"},
+				{countryName:"New Zealand Dollar",code:"NZD"},
+				{countryName:"Norway Krone",code:"NOK"},
+				{countryName:"Philippines Peso",code:"PHP"},
+				{countryName:"Poland Zloty",code:"PLN"},
+				{countryName:"Romania New Leu",code:"RON"},
+				{countryName:"Russia Ruble",code:"RUB"},
+				{countryName:"Singapore Dollar",code:"SGD"},
+				{countryName:"Sweden Krona",code:"SEK"},
+				{countryName:"Switzerland Franc",code:"CHF"},
+				{countryName:"South Africa Rand",code:"ZAR"},
+				{countryName:"South Korea Won",code:"KRW"},
+				{countryName:"Thailand Baht",code:"THB"},
+				{countryName:"Turkey Lira",code:"TRY"},
+				{countryName:"United Kingdom Pound",code:"GBP"},
+				{countryName:"United States Dollar",code:"USD"}
+			];
+			var country_name = document.getElementById("country_name_from");
+			var country_name = document.getElementById("country_name_to");
+			for(var x=0, y=country.length; x<y ; x++){
+				country_name_from.options.add(new Option(country[x].countryName, country[x].code));
+				country_name_to.options.add(new Option(country[x].countryName, country[x].code));
+			}
+    	}
+
+    	function calculate(){
+    		var money_from = parseInt(document.getElementById("money_from").value);
+    		if (!(money_from >= 0)){
+		 		Materialize.toast('Please insert a valid positive number.', 2000);
+		 		return;
+			}
+    		var country_from = document.getElementById("country_name_from").value ;
+    		var country_to = document.getElementById("country_name_to").value;
+    		if (country_from == 'NONE' || country_to == 'NONE'){
+		 		Materialize.toast('Please insert a valid option.', 2000);
+		 		return;
+			}
+    		var money_to = money_from*parseInt(Currency.rates[country_from])/parseInt(Currency.rates[country_to]);
+    		document.getElementById('money_to').value = money_to.toFixed(2);
+    	}
+
+				
+			
+		
+      </script>
+    </head>
+
+    <body>
+    	
+      <!--Import jQuery before materialize.js-->
+      	
+      	<script type="text/javascript" src="js/materialize.min.js"></script>
+      	<nav>
+ 	  	  <div class="nav-wrapper">
+ 	  	    <a href="#" class="brand-logo">Currency Converter</a>
+ 	  	    <ul id="nav-mobile" class="right hide-on-med-and-down">
+ 	  	      <li><a href="https://github.com/Zhengggggg">Github</a></li>
+ 	  	      <li><a href="https://www.facebook.com/teo.y.zheng">Facebook</a></li>
+ 	  	    </ul>
+ 	  	  </div>
+ 	  	</nav>
+
+ 	  	
+ 	  	<div class="row">
+		    <form class="col s12">
+		      <div class="row">
+		        <div class="input-field col s12">
+		          <input id="money_from" type="text" class="validate">
+		          <label for="money_from">The Amount of Money</label>
+		        </div>
+		      </div>
+		      <div class="row">
+		        <div class="input-field col s6">
+  				  <select id="country_name_from">
+  				    <option value="NONE" disabled selected>Choose your option</option>
+  				  </select>
+  				  <label>Input Currency</label>
+  				</div>
+			  </div>
+			  <div class="row">	
+  				<div class="input-field col s6">
+  				  <select id="country_name_to">
+  				    <option value="NONE" disabled selected>Choose your option</option>
+  				  </select>
+  				  <label>Output Currency</label>
+  				</div>
+  			  </div>	
+		      <div class="row">
+		        <a class="waves-effect waves-light btn" onclick="calculate()">
+		        	Calculate</a>
+		      </div>
+		      <div class="row">
+		        <div class="col s12">
+		         The converted amount of money
+		          <div class="input-field inline">
+		            <input id="money_to" type="text" class="validate" readonly>
+		          </div>
+		        </div>
+		      </div>
+		    </form>
+		</div>
+ 	  	<footer class="page-footer">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">Currency Converter</h5>
+                <p class="grey-text text-lighten-4" id="date" ></p>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Links</h5>
+                <ul>
+                  <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <div class="container">
+            © 2017 Copyright Text
+            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            </div>
+          </div>
+        </footer>
+    </body>
+  </html>
